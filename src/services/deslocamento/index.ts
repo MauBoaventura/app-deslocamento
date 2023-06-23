@@ -1,17 +1,42 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxiosResponse } from 'axios'
-import { IPageBeneficiarioDTO, IBeneficiarioProps } from './types'
+import { AxiosResponse } from "axios";
+import {
+  IDeslocamentoProps,
+  IDeslocamentoIniciarBody,
+  IDeslocamentoDTO,
+  IDeslocamentoUpdateBody,
+} from "./types";
 
-import objectToParams from 'utils/ObjectToParams'
+import { axiosApi as deslocamentoApi } from "../index";
 
-import { axiosApi as deslocamentoApi } from '../contrato/index'
+const baseUrlDeslocamento = "/Deslocamento";
 
-const baseUrlContratos = '/segurados'
-
-export class Beneficiario {
-  static async get(props?: IBeneficiarioProps): Promise<AxiosResponse<IPageBeneficiarioDTO>> {
-    const params = objectToParams(props)
-    const url = props ? `${baseUrlContratos}?${params}` : baseUrlContratos
-    return deslocamentoApi.get(url)
+export class Deslocamento {
+  static async getAll(): Promise<AxiosResponse<IDeslocamentoDTO[]>> {
+    const url = baseUrlDeslocamento;
+    return deslocamentoApi.get(url);
+  }
+  static async getById(
+    props: IDeslocamentoProps
+  ): Promise<AxiosResponse<IDeslocamentoDTO>> {
+    const url = `${baseUrlDeslocamento}/${props.id}`;
+    return deslocamentoApi.get(url);
+  }
+  static async iniciarDeslocamento(
+    data: IDeslocamentoIniciarBody
+  ): Promise<AxiosResponse<number>> {
+    const url = `${baseUrlDeslocamento}/IniciarDeslocamento`;
+    return deslocamentoApi.post(url, data);
+  }
+  static async encerrarDeslocamento(
+    props: IDeslocamentoProps,
+    data: IDeslocamentoUpdateBody
+  ) {
+    const url = `${baseUrlDeslocamento}/${props.id}/EncerrarDeslocamento`;
+    return deslocamentoApi.put(url, data);
+  }
+  static async delete(props: IDeslocamentoProps) {
+    const url = `${baseUrlDeslocamento}/${props.id}`;
+    return deslocamentoApi.delete(url);
   }
 }

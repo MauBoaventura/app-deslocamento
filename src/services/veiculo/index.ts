@@ -1,17 +1,43 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxiosResponse } from 'axios'
-import { IPageBeneficiarioDTO, IBeneficiarioProps } from './types'
+import { AxiosResponse } from "axios";
+import {
+  IPageVeiculoDTO,
+  IVeiculoProps,
+  IVeiculoSaveBody,
+  IVeiculoDTO,
+  IVeiculoUpdateBody,
+} from "./types";
 
-import objectToParams from 'utils/ObjectToParams'
+import { axiosApi as deslocamentoApi } from "../index";
 
-import { axiosApi as deslocamentoApi } from '../contrato/index'
+const baseUrlVeiculo = "/Veiculo";
 
-const baseUrlContratos = '/segurados'
-
-export class Beneficiario {
-  static async get(props?: IBeneficiarioProps): Promise<AxiosResponse<IPageBeneficiarioDTO>> {
-    const params = objectToParams(props)
-    const url = props ? `${baseUrlContratos}?${params}` : baseUrlContratos
-    return deslocamentoApi.get(url)
+export class Veiculo {
+  static async getAll(): Promise<AxiosResponse<IVeiculoDTO[]>> {
+    const url = baseUrlVeiculo;
+    return deslocamentoApi.get(url);
+  }
+  static async getById(
+    props: IVeiculoProps
+  ): Promise<AxiosResponse<IVeiculoDTO>> {
+    const url = `${baseUrlVeiculo}/${props.id}`;
+    return deslocamentoApi.get(url);
+  }
+  static async save(data: IVeiculoSaveBody): Promise<AxiosResponse<number>> {
+    const url = baseUrlVeiculo;
+    return deslocamentoApi.post(url, data);
+  }
+  static async update(
+    props: IVeiculoProps,
+    data: IVeiculoUpdateBody
+  ): Promise<AxiosResponse<IVeiculoDTO>> {
+    const url = `${baseUrlVeiculo}/${props.id}`;
+    return deslocamentoApi.put(url, data);
+  }
+  static async delete(
+    props: IVeiculoProps
+  ): Promise<AxiosResponse<IVeiculoProps>> {
+    const url = `${baseUrlVeiculo}/${props.id}`;
+    return deslocamentoApi.delete(url);
   }
 }
