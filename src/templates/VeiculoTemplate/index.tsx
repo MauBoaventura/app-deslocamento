@@ -3,80 +3,67 @@ import { SetStateAction, useEffect, useState } from 'react'
 
 import { useRouter } from 'next/router'
 import ListItem from 'components/atoms/List'
-import { ClientesService } from '../../services/cliente';
+import { VeiculosService } from '../../services/veiculo';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Snackbar, Stack, TextField, TextareaAutosize } from '@mui/material';
-import { IClienteDTO, IClienteSaveBody, IClienteUpdateBody } from '../../services/cliente/types';
+import { IVeiculoDTO, IVeiculoSaveBody, IVeiculoUpdateBody } from '../../services/veiculo/types';
 import { toast } from 'react-toastify';
+import Head from 'next/head';
 
-const ClientesTemplate = () => {
+const VeiculosTemplate = () => {
   const router = useRouter()
   const [rows, setRows] = useState<any[]>([])
   const [columns, setColumns] = useState<any[]>([])
 
   const [openNewDialog, setOpenNewDialog] = useState(false);
-  const [itemNew, setItemNew] = useState<IClienteDTO>();
+  const [itemNew, setItemNew] = useState<IVeiculoDTO>({} as IVeiculoDTO);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [itemDelete, setItemDelete] = useState<any>();
 
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [itemEdit, setItemEdit] = useState<IClienteDTO>({} as IClienteDTO);
+  const [itemEdit, setItemEdit] = useState<IVeiculoDTO>({} as IVeiculoDTO);
 
 
   useEffect(() => {
-    ClientesService.getAll().then((response) => {
+    VeiculosService.getAll().then((response) => {
       setRows(response.data)
-      const c = [{ key: 'id', label: 'Id' },
-      { key: 'numeroDocumento', label: 'N. Documento' },
-      { key: 'tipoDocumento', label: 'Tipo Documento' },
-      { key: 'nome', label: 'Nome' },
-      { key: 'logradouro', label: 'Logradouro' },
-      { key: 'numero', label: 'Numero' },
-      { key: 'bairro', label: 'Bairro' },
-      { key: 'cidade', label: 'Cidade' },
-      { key: 'uf', label: 'UF' },]
-      console.log(c)
+      // const c = [{ key: 'id', label: 'Id' },
+      // { key: 'placa', label: 'N. Documento' },
+      // { key: 'marcaModelo', label: 'Tipo Documento' },
+      // { key: 'anoFabricacao', label: 'Nome' },
+      // { key: 'kmAtual', label: 'Logradouro' },
+      // { key: 'numero', label: 'Numero' },
+      // { key: 'bairro', label: 'Bairro' },
+      // { key: 'cidade', label: 'Cidade' },
+      // { key: 'uf', label: 'UF' },]
+      // console.log(c)
 
-      setColumns(c)
-      // setColumns(Object.keys(response.data[0]).map((key) => {
-      //   const result = key.replace(/([A-Z])/g, " $1");
-      //   const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
-      //   return {
-      //     key: key, label: finalResult
-      //   }
-      // }))
+      // setColumns(c)
+      setColumns(Object.keys(response.data[0]).map((key) => {
+        const result = key.replace(/([A-Z])/g, " $1");
+        const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+        return {
+          key: key, label: finalResult
+        }
+      }))
     })
   }, [])
 
 
   const handleNew = () => {
     setOpenNewDialog(true);
-    setItemNew({
-      id: 0
-      , numeroDocumento: ''
-      , tipoDocumento: ''
-      , nome: ''
-      , logradouro: ''
-      , numero: ''
-      , bairro: ''
-      , cidade: ''
-      , uf: ''
-    })
+    setItemNew({} as IVeiculoDTO)
 
   };
 
   const handleSave = () => {
-    const data: IClienteSaveBody = {
-      numeroDocumento: itemNew?.numeroDocumento,
-      tipoDocumento: itemNew?.tipoDocumento,
-      nome: itemNew?.nome,
-      logradouro: itemNew?.logradouro,
-      numero: itemNew?.numero,
-      bairro: itemNew?.bairro,
-      cidade: itemNew?.cidade,
-      uf: itemNew?.uf,
+    const data: IVeiculoSaveBody = {
+      placa: itemNew?.placa,
+      marcaModelo: itemNew?.marcaModelo,
+      anoFabricacao: itemNew?.anoFabricacao,
+      kmAtual: itemNew?.kmAtual,
     }
-    ClientesService.save(data).then((response) => {
+    VeiculosService.save(data).then((response) => {
       setRows([...rows, {...data, id: response?.data}])
       toast('Registro salvo com sucesso!', { type: 'success' })
     }).finally(() => {
@@ -92,7 +79,7 @@ const ClientesTemplate = () => {
 
   const handleDelete = () => {
     console.log(itemDelete)
-    ClientesService.delete({ id: itemDelete?.[0]?.id }).then((response) => {
+    VeiculosService.delete({ id: itemDelete?.[0]?.id }).then((response) => {
       setRows(rows.filter((row) => row.id !== itemDelete?.[0]?.id))
       toast('Registro apagado!', { type: 'error' })
     }).finally(() => {
@@ -105,9 +92,9 @@ const ClientesTemplate = () => {
     setOpenNewDialog(false);
     setOpenDeleteDialog(false);
     setOpenEditDialog(false);
-    setItemNew(undefined)
+    setItemNew({} as IVeiculoDTO)
     setItemDelete(undefined)
-    setItemEdit({} as IClienteDTO)
+    setItemEdit({} as IVeiculoDTO)
   };
 
   const handleClickEdit = (id: any) => {
@@ -117,16 +104,13 @@ const ClientesTemplate = () => {
 
   const handleEdit = () => {
     console.log(itemEdit)
-    const data: IClienteUpdateBody = {
-      id: itemEdit?.id as number,
-      nome: itemEdit?.nome,
-      logradouro: itemEdit?.logradouro,
-      numero: itemEdit?.numero,
-      bairro: itemEdit?.bairro,
-      cidade: itemEdit?.cidade,
-      uf: itemEdit?.uf,
+    const data: IVeiculoUpdateBody = {
+      id: itemEdit?.id,
+      marcaModelo: itemEdit?.marcaModelo,
+      anoFabricacao: itemEdit?.anoFabricacao,
+      kmAtual: itemEdit?.kmAtual,
     }
-    ClientesService.update({ id: itemEdit?.id ?? 0 }, data).then((response) => {
+    VeiculosService.update({ id: itemEdit?.id ?? 0 }, data).then((response) => {
       setRows(rows.map((row) => {
         if (row.id === itemEdit?.id) {
           return {
@@ -139,12 +123,15 @@ const ClientesTemplate = () => {
       toast('Registro alterado com sucesso!', { type: 'success' })
     }).finally(() => {
       setOpenEditDialog(false);
-      setItemEdit({} as IClienteDTO)
+      setItemEdit({} as IVeiculoDTO)
     })
   };
 
   return (
     <>
+    <Head>
+      <title>SGD Naty - Veiculos</title>
+    </Head>
       <Stack
         direction="column"
         // justifyContent="center"
@@ -157,7 +144,6 @@ const ClientesTemplate = () => {
           </Button>
         </Grid>
 
-       
         <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} />
       </Stack>
 
@@ -175,106 +161,54 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="numeroDocumento"
-            label="Número do Documento"
+            id="placa"
+            label="Placa"
             type="text"
             fullWidth
             variant="standard"
-            value={itemNew?.numeroDocumento}
+            value={itemNew?.placa}
             onChange={(event) => {
               console.log(event?.target?.value)
-              setItemNew(itemNew ? { ...itemNew, numeroDocumento: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, placa: event?.target?.value })
             }}
           />
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Tipo Documento"
+            label="Marca Modelo"
             type="text"
             fullWidth
             variant="standard"
-            value={itemNew?.tipoDocumento}
+            value={itemNew?.marcaModelo}
             onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, tipoDocumento: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, marcaModelo: event?.target?.value })
             }}
           />
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Nome"
+            label="Ano Fabricacao"
             type="text"
             fullWidth
             variant="standard"
-            value={itemNew?.nome}
+            value={itemNew?.anoFabricacao}
             onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, nome: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, anoFabricacao: parseInt(event?.target?.value) })
             }}
           />
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Logradouro"
+            label="KM Atual"
             type="text"
             fullWidth
             variant="standard"
-            value={itemNew?.logradouro}
+            value={itemNew?.kmAtual}
             onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, logradouro: event?.target?.value } : undefined)
-            }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Número"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={itemNew?.numero}
-            onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, numero: event?.target?.value } : undefined)
-            }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Bairro"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={itemNew?.bairro}
-            onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, bairro: event?.target?.value } : undefined)
-            }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Cidade"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={itemNew?.cidade}
-            onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, cidade: event?.target?.value } : undefined)
-            }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="UF"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={itemNew?.uf}
-            onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, uf: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, kmAtual: parseInt(event?.target?.value) })
             }}
           />
         </DialogContent>
@@ -298,7 +232,7 @@ const ClientesTemplate = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {`Deseja realmente apagar o registro do ` + itemDelete?.[0]?.nome + `?`}
+            {`Deseja realmente apagar o registro do ` + itemDelete?.[0]?.placa + `?`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -324,26 +258,26 @@ const ClientesTemplate = () => {
             autoFocus
             margin="dense"
             id="name"
-            label="Nome"
+            label="Marca Modelo"
             type="text"
             fullWidth
             variant="standard"
-            value={itemEdit?.nome}
+            value={itemEdit?.marcaModelo}
             onChange={(event) => {
-              setItemEdit({ ...itemEdit, nome: event?.target?.value } )
+              setItemEdit({ ...itemEdit, marcaModelo: event?.target?.value } )
             }}
           />
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Logradouro"
+            label="Ano Fabricacao"
             type="text"
             fullWidth
             variant="standard"
-            value={itemEdit?.logradouro}
+            value={itemEdit?.anoFabricacao}
             onChange={(event) => {
-              setItemEdit({ ...itemEdit, logradouro: event?.target?.value })
+              setItemEdit({ ...itemEdit, anoFabricacao: parseInt(event?.target?.value) })
             }}
           />
           <TextField
@@ -354,48 +288,9 @@ const ClientesTemplate = () => {
             type="text"
             fullWidth
             variant="standard"
-            value={itemEdit?.numero}
+            value={itemEdit?.kmAtual}
             onChange={(event) => {
-              setItemEdit({ ...itemEdit, numero: event?.target?.value })
-            }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Bairro"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={itemEdit?.bairro}
-            onChange={(event) => {
-              setItemEdit({ ...itemEdit, bairro: event?.target?.value })
-            }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Cidade"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={itemEdit?.cidade}
-            onChange={(event) => {
-              setItemEdit({ ...itemEdit, cidade: event?.target?.value })
-            }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="UF"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={itemEdit?.uf}
-            onChange={(event) => {
-              setItemEdit({ ...itemEdit, uf: event?.target?.value })
+              setItemEdit({ ...itemEdit, kmAtual: parseInt(event?.target?.value) })
             }}
           />
         </DialogContent>
@@ -410,4 +305,4 @@ const ClientesTemplate = () => {
   )
 }
 
-export default ClientesTemplate
+export default VeiculosTemplate

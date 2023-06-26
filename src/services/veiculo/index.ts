@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosResponse } from "axios";
 import {
-  IPageVeiculoDTO,
   IVeiculoProps,
   IVeiculoSaveBody,
   IVeiculoDTO,
@@ -12,7 +11,7 @@ import { axiosApi as deslocamentoApi } from "../index";
 
 const baseUrlVeiculo = "/Veiculo";
 
-export class VeiculoService {
+export class VeiculosService {
   static async getAll(): Promise<AxiosResponse<IVeiculoDTO[]>> {
     const url = baseUrlVeiculo;
     return deslocamentoApi.get(url);

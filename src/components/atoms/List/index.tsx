@@ -35,7 +35,7 @@ export default function ListItem({ rows, columns , deleteAction, editAction}: { 
     return (
         <Paper sx={{ width: '100%' }}>{columns ? <>
 
-            <TableContainer sx={{ maxHeight: 440 }}>
+            <TableContainer sx={{ maxHeight: 400 }}>
                 <Table aria-label="dense table stickyHeader" 
                     size={'small'}>
                     <TableHead >
@@ -69,11 +69,11 @@ export default function ListItem({ rows, columns , deleteAction, editAction}: { 
                                             );
                                         })}
                                         <TableCell align={`center`} padding='checkbox'>
-                                            <IconButton aria-label="delete" size='small'>
-                                                <Delete color='error' onClick={()=>handleDeleteClick(row?.id)} />
-                                            </IconButton>
                                             <IconButton aria-label="edit">
                                                 <Edit color='info' onClick={()=>handleEditClick(row?.id)} />
+                                            </IconButton>
+                                            <IconButton aria-label="delete" size='small'>
+                                                <Delete color='error' onClick={()=>handleDeleteClick(row?.id)} />
                                             </IconButton>
                                         </TableCell>
                                     </TableRow>
