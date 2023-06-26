@@ -19,7 +19,9 @@
       "styles/*": ["./src/styles/*"],
       "components/*": ["./src/components/*"],
       "templates/*": ["./src/templates/*"],
-      "utils/*": ["./src/utils/*"]
+      "utils/*": ["./src/utils/*"],
+      "hooks/*": ["./src/hooks/*"],
+      "context/*": ["./src/context/*"]
     },
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
