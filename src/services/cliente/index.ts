@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosResponse } from "axios";
 import {
-  IPageClienteDTO,
   IClienteProps,
   IClienteSaveBody,
   IClienteDTO,
@@ -12,20 +11,20 @@ import { axiosApi as deslocamentoApi } from "../index";
 
 const baseUrlCliente = "/Cliente";
 
-export class Cliente {
-  static async getAll(): Promise<AxiosResponse<IPageClienteDTO>> {
+export class ClientesService {
+  static async getAll(): Promise<AxiosResponse<IClienteDTO[]>> {
     const url = baseUrlCliente;
     return deslocamentoApi.get(url);
   }
   static async getById(
     props: IClienteProps
-  ): Promise<AxiosResponse<IPageClienteDTO>> {
+  ): Promise<AxiosResponse<IClienteDTO>> {
     const url = `${baseUrlCliente}/${props.id}`;
     return deslocamentoApi.get(url);
   }
   static async save(
     data: IClienteSaveBody
-  ): Promise<AxiosResponse<IPageClienteDTO>> {
+  ): Promise<AxiosResponse<number>> {
     const url = baseUrlCliente;
     return deslocamentoApi.post(url, data);
   }
@@ -40,6 +39,6 @@ export class Cliente {
     props: IClienteProps
   ): Promise<AxiosResponse<IClienteProps>> {
     const url = `${baseUrlCliente}/${props.id}`;
-    return deslocamentoApi.delete(url);
+    return deslocamentoApi.delete(url, { data: { ...props}});
   }
 }

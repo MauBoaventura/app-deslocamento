@@ -11,7 +11,7 @@ import { axiosApi as deslocamentoApi } from "../index";
 
 const baseUrlDeslocamento = "/Deslocamento";
 
-export class Deslocamento {
+export class DeslocamentoService {
   static async getAll(): Promise<AxiosResponse<IDeslocamentoDTO[]>> {
     const url = baseUrlDeslocamento;
     return deslocamentoApi.get(url);
@@ -37,6 +37,6 @@ export class Deslocamento {
   }
   static async delete(props: IDeslocamentoProps) {
     const url = `${baseUrlDeslocamento}/${props.id}`;
-    return deslocamentoApi.delete(url);
+    return deslocamentoApi.delete(url, { data: { ...props}});
   }
 }

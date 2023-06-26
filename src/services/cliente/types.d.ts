@@ -1,7 +1,5 @@
 import { IPageResult } from "src/types/pagination";
 
-export type IPageClienteDTO = IPageResult<IClienteDTO>;
-
 export interface IClienteDTO {
   id: number;
   numeroDocumento: string;

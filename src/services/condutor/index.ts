@@ -12,7 +12,7 @@ import { axiosApi as deslocamentoApi } from "../index";
 
 const baseUrlCondutor = "/Condutor";
 
-export class Condutor {
+export class CondutorService {
   static async getAll(): Promise<AxiosResponse<ICondutorDTO[]>> {
     const url = baseUrlCondutor;
     return deslocamentoApi.get(url);
@@ -38,6 +38,6 @@ export class Condutor {
     props: ICondutorProps
   ): Promise<AxiosResponse<ICondutorProps>> {
     const url = `${baseUrlCondutor}/${props.id}`;
-    return deslocamentoApi.delete(url);
+    return deslocamentoApi.delete(url, { data: { ...props}});
   }
 }
