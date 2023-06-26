@@ -9,9 +9,8 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Button, IconButton } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
-import theme from '../../../theme';
 
-export default function ListItem({ rows, columns , deleteAction}: { rows: any[], columns: any[] , deleteAction: any}) {
+export default function ListItem({ rows, columns , deleteAction, editAction}: { rows: any[], columns: any[] , deleteAction: any, editAction: any}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -26,6 +25,7 @@ export default function ListItem({ rows, columns , deleteAction}: { rows: any[],
 
     const handleEditClick = (id: string) => {
         console.log('Botão de Editar clicado '+id);
+        editAction(id)
     };
 
     const handleDeleteClick = (id: string) => {
@@ -42,7 +42,7 @@ export default function ListItem({ rows, columns , deleteAction}: { rows: any[],
                             {columns?.map((column) => (
                                 <TableCell
                                     key={column.key}
-                                    align={`right`}
+                                    // align={`right`}
                                     style={{ minWidth: column.minWidth }}
                                 >
                                     {column.label}
@@ -75,7 +75,6 @@ export default function ListItem({ rows, columns , deleteAction}: { rows: any[],
                                             <IconButton aria-label="edit">
                                                 <Edit color='info' onClick={()=>handleEditClick(row?.id)} />
                                             </IconButton>
-
                                         </TableCell>
                                     </TableRow>
                                 );
