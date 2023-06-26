@@ -17,12 +17,12 @@ export interface ICondutorProps {
 export interface ICondutorSaveBody {
   nome?: string;
   numeroHabilitacao?: string;
-  catergoriaHabilitacao?: string;
+  categoriaHabilitacao?: string;
   vencimentoHabilitacao?: string;
 }
 
 export interface ICondutorUpdateBody {
   id?: number;
-  catergoriaHabilitacao?: string;
+  categoriaHabilitacao?: string;
   vencimentoHabilitacao?: string;
 }
