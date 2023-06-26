@@ -4,13 +4,16 @@ import { SetStateAction, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import ListItem from 'components/atoms/List'
 import { ClientesService } from '../../services/cliente';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack, TextField, TextareaAutosize } from '@mui/material';
-import { IClienteDTO, IClienteUpdateBody } from '../../services/cliente/types';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, TextField, TextareaAutosize } from '@mui/material';
+import { IClienteDTO, IClienteSaveBody, IClienteUpdateBody } from '../../services/cliente/types';
 
 const ClientesTemplate = () => {
   const router = useRouter()
   const [rows, setRows] = useState<any[]>([])
   const [columns, setColumns] = useState<any[]>([])
+
+  const [openNewDialog, setOpenNewDialog] = useState(false);
+  const [itemNew, setItemNew] = useState<IClienteDTO>();
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [itemDelete, setItemDelete] = useState<any>();
@@ -22,15 +25,62 @@ const ClientesTemplate = () => {
   useEffect(() => {
     ClientesService.getAll().then((response) => {
       setRows(response.data)
-      setColumns(Object.keys(response.data[0]).map((key) => {
-        const result = key.replace(/([A-Z])/g, " $1");
-        const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
-        return {
-          key: key, label: finalResult
-        }
-      }))
+      const c = [{ key: 'id', label: 'Id' },
+      { key: 'numeroDocumento', label: 'N. Documento' },
+      { key: 'tipoDocumento', label: 'Tipo Documento' },
+      { key: 'nome', label: 'Nome' },
+      { key: 'logradouro', label: 'Logradouro' },
+      { key: 'numero', label: 'Numero' },
+      { key: 'bairro', label: 'Bairro' },
+      { key: 'cidade', label: 'Cidade' },
+      { key: 'uf', label: 'UF' },]
+      console.log(c)
+
+      setColumns(c)
+      // setColumns(Object.keys(response.data[0]).map((key) => {
+      //   const result = key.replace(/([A-Z])/g, " $1");
+      //   const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+      //   return {
+      //     key: key, label: finalResult
+      //   }
+      // }))
     })
   }, [])
+
+
+  const handleNew = () => {
+    setOpenNewDialog(true);
+    setItemNew({
+      id: 0
+      , numeroDocumento: ''
+      , tipoDocumento: ''
+      , nome: ''
+      , logradouro: ''
+      , numero: ''
+      , bairro: ''
+      , cidade: ''
+      , uf: ''
+    })
+
+  };
+
+  const handleSave = () => {
+    const data: IClienteSaveBody = {
+      numeroDocumento: itemNew?.numeroDocumento,
+      tipoDocumento: itemNew?.tipoDocumento,
+      nome: itemNew?.nome,
+      logradouro: itemNew?.logradouro,
+      numero: itemNew?.numero,
+      bairro: itemNew?.bairro,
+      cidade: itemNew?.cidade,
+      uf: itemNew?.uf,
+    }
+    ClientesService.save(data).then((response) => {
+      setRows([...rows, {...data, id: response?.data}])
+    }).finally(() => {
+      handleClose()
+    })
+  };
 
   const handleClickDelete = (id: any) => {
     setOpenDeleteDialog(true);
@@ -49,8 +99,11 @@ const ClientesTemplate = () => {
   };
 
   const handleClose = () => {
+
+    setOpenNewDialog(false);
     setOpenDeleteDialog(false);
     setOpenEditDialog(false);
+    setItemNew(undefined)
     setItemDelete(undefined)
     setItemEdit(undefined)
   };
@@ -92,12 +145,144 @@ const ClientesTemplate = () => {
     <>
       <Stack
         direction="column"
-        justifyContent="center"
-        alignItems="center"
+        // justifyContent="center"
+        // alignItems="right"
         spacing={2}
       >
+        <Grid container justifyContent="flex-end" marginRight={'16px'}>
+          <Button onClick={handleNew} color='success' variant='contained' >
+            Novo
+          </Button>
+        </Grid>
+
+       
         <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} />
       </Stack>
+
+      {/* New Dialog */}
+      <Dialog
+        open={openNewDialog}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Novo:"}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="numeroDocumento"
+            label="Número do Documento"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={itemNew?.numeroDocumento}
+            onChange={(event) => {
+              console.log(event?.target?.value)
+              setItemNew(itemNew ? { ...itemNew, numeroDocumento: event?.target?.value } : undefined)
+            }}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Tipo Documento"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={itemNew?.tipoDocumento}
+            onChange={(event) => {
+              setItemNew(itemNew ? { ...itemNew, tipoDocumento: event?.target?.value } : undefined)
+            }}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Nome"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={itemNew?.nome}
+            onChange={(event) => {
+              setItemNew(itemNew ? { ...itemNew, nome: event?.target?.value } : undefined)
+            }}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Logradouro"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={itemNew?.logradouro}
+            onChange={(event) => {
+              setItemNew(itemNew ? { ...itemNew, logradouro: event?.target?.value } : undefined)
+            }}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Número"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={itemNew?.numero}
+            onChange={(event) => {
+              setItemNew(itemNew ? { ...itemNew, numero: event?.target?.value } : undefined)
+            }}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Bairro"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={itemNew?.bairro}
+            onChange={(event) => {
+              setItemNew(itemNew ? { ...itemNew, bairro: event?.target?.value } : undefined)
+            }}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Cidade"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={itemNew?.cidade}
+            onChange={(event) => {
+              setItemNew(itemNew ? { ...itemNew, cidade: event?.target?.value } : undefined)
+            }}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="UF"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={itemNew?.uf}
+            onChange={(event) => {
+              setItemNew(itemNew ? { ...itemNew, uf: event?.target?.value } : undefined)
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancelar</Button>
+          <Button onClick={handleSave} autoFocus>
+            Salvar
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Delete Dialog */}
       <Dialog

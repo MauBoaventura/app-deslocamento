@@ -71,7 +71,11 @@ export default function Layout({ title, children }: LayoutProps) {
         </List>
         <Divider />
       </Drawer>
-      {children}
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Toolbar />
+
+        {children}
+      </Box>
 
     </Box>
 

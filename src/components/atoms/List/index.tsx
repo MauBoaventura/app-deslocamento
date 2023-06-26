@@ -36,19 +36,21 @@ export default function ListItem({ rows, columns , deleteAction, editAction}: { 
         <Paper sx={{ width: '100%' }}>{columns ? <>
 
             <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
+                <Table aria-label="dense table stickyHeader" 
+                    size={'small'}>
+                    <TableHead >
                         <TableRow>
                             {columns?.map((column) => (
                                 <TableCell
                                     key={column.key}
-                                    // align={`right`}
-                                    style={{ minWidth: column.minWidth }}
+                                    align={`left`}
+                                    // style={{ minWidth: column.minWidth }}
+                                    role="checkbox" tabIndex={-1}
                                 >
                                     {column.label}
                                 </TableCell>
                             ))}
-                            <TableCell key={0} align={`right`}>
+                            <TableCell key={0} align={`center`}>
                                 Ações
                             </TableCell>
                         </TableRow>
@@ -61,15 +63,13 @@ export default function ListItem({ rows, columns , deleteAction, editAction}: { 
                                         {columns?.map((column) => {
                                             const value = row[column.key];
                                             return (
-                                                <TableCell key={column.key} align={column.align}>
-                                                    {column.format && typeof value === 'number'
-                                                        ? column.format(value)
-                                                        : value}
+                                                <TableCell key={column.key} align={column.align} padding='checkbox'>
+                                                    {value}
                                                 </TableCell>
                                             );
                                         })}
-                                        <TableCell key={0} align={`center`}>
-                                            <IconButton aria-label="delete">
+                                        <TableCell align={`center`} padding='checkbox'>
+                                            <IconButton aria-label="delete" size='small'>
                                                 <Delete color='error' onClick={()=>handleDeleteClick(row?.id)} />
                                             </IconButton>
                                             <IconButton aria-label="edit">
