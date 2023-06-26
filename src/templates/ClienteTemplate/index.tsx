@@ -4,8 +4,9 @@ import { SetStateAction, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import ListItem from 'components/atoms/List'
 import { ClientesService } from '../../services/cliente';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, TextField, TextareaAutosize } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Snackbar, Stack, TextField, TextareaAutosize } from '@mui/material';
 import { IClienteDTO, IClienteSaveBody, IClienteUpdateBody } from '../../services/cliente/types';
+import { toast } from 'react-toastify';
 
 const ClientesTemplate = () => {
   const router = useRouter()
@@ -77,6 +78,7 @@ const ClientesTemplate = () => {
     }
     ClientesService.save(data).then((response) => {
       setRows([...rows, {...data, id: response?.data}])
+      toast('Registro salvo com sucesso!', { type: 'success' })
     }).finally(() => {
       handleClose()
     })
@@ -92,6 +94,7 @@ const ClientesTemplate = () => {
     console.log(itemDelete)
     ClientesService.delete({ id: itemDelete?.[0]?.id }).then((response) => {
       setRows(rows.filter((row) => row.id !== itemDelete?.[0]?.id))
+      toast('Registro apagado!', { type: 'error' })
     }).finally(() => {
       setOpenDeleteDialog(false);
       setItemDelete(undefined)
@@ -99,7 +102,6 @@ const ClientesTemplate = () => {
   };
 
   const handleClose = () => {
-
     setOpenNewDialog(false);
     setOpenDeleteDialog(false);
     setOpenEditDialog(false);
@@ -111,7 +113,6 @@ const ClientesTemplate = () => {
   const handleClickEdit = (id: any) => {
     setOpenEditDialog(true);
     setItemEdit(rows.filter((row) => row.id === id)[0])
-
   };
 
   const handleEdit = () => {
@@ -135,6 +136,7 @@ const ClientesTemplate = () => {
         }
         return row
       }))
+      toast('Registro alterado com sucesso!', { type: 'success' })
     }).finally(() => {
       setOpenEditDialog(false);
       setItemEdit(undefined)
@@ -404,7 +406,6 @@ const ClientesTemplate = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
     </>
   )
 }
