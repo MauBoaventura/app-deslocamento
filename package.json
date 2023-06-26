@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/js-cookie": "^3.0.3",
     "@types/node": "latest",
     "@types/react": "latest",
     "eslint": "latest",

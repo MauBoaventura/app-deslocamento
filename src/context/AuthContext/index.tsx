@@ -5,7 +5,7 @@
 import useStorage from 'hooks/storage/useStorage'
 
 import React, { createContext, useEffect, useState } from 'react'
-import { getProfile } from 'src/services/managment/user'
+// import { getProfile } from 'src/services/managment/user'
 
 import { localStorageToken, localStorageUserData } from 'utils/constants'
 
@@ -28,18 +28,18 @@ const AuthProvider = ({ children }: StateProviderProps) => {
 
   useEffect(() => {
     if (data?.name === undefined || data?.email === undefined || data?.imageUrl === undefined) {
-      getProfile()
-        .then((response) => {
-          setDataUser({
-            ...data,
-            ['name']: response.name,
-            ['email']: response.email,
-            ['imageUrl']: response.imageUrl
-          })
-        })
-        .catch((error) => {
-          // console.log(error)
-        })
+      // getProfile()
+      //   .then((response) => {
+      //     setDataUser({
+      //       ...data,
+      //       ['name']: response.name,
+      //       ['email']: response.email,
+      //       ['imageUrl']: response.imageUrl
+      //     })
+      //   })
+      //   .catch((error) => {
+      //     // console.log(error)
+      //   })
     } else {
       setDataUser(data)
     }
