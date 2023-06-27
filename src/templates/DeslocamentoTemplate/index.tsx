@@ -38,7 +38,7 @@ const DeslocamentoesTemplate = () => {
       const c = [{ key: "id", label: "Id" },
       { key: "kmInicial", label: "Km Inicial" },
       { key: "kmFinal", label: "Km Final" },
-      { key: "inicioDeslocamento", label: "Inicio Deslocamento", type: 'date'},
+      { key: "inicioDeslocamento", label: "Inicio Deslocamento", type: 'date' },
       { key: "fimDeslocamento", label: "Fim Deslocamento", type: 'date' },
       { key: "checkList", label: "Check List" },
       { key: "motivo", label: "Motivo" },
@@ -215,22 +215,25 @@ const DeslocamentoesTemplate = () => {
       <Head>
         <title>SGD Naty - Deslocamento</title>
       </Head>
-      {loading ? <CircularProgress /> :
-        <Stack
-          direction="column"
-          // justifyContent="center"
-          // alignItems="right"
-          spacing={2}
-        >
-          <Grid container justifyContent="flex-end" marginRight={'16px'}>
-            <Button onClick={handleNew} color='success' variant='contained' >
-              Iniciar Deslocamento
-            </Button>
-          </Grid>
+      <Stack
+        direction="column"
+        // justifyContent="center"
+        // alignItems="right"
+        spacing={2}
+      >
+        <Grid container justifyContent="flex-end" marginRight={'16px'}>
+          <Button onClick={handleNew} color='success' variant='contained' >
+            Iniciar Deslocamento
+          </Button>
+        </Grid>
 
-          <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} hideOptions />
-        </Stack>
-      }
+        {loading ?
+          <Grid container justifyContent="center" margin={'16px'} minHeight={'200px'} alignItems={'center'}>
+            <CircularProgress />
+          </Grid>
+          : <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} hideOptions />
+        }
+      </Stack>
 
       {/* New Dialog */}
       <Dialog

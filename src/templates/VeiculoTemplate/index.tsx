@@ -56,11 +56,13 @@ const VeiculosTemplate = () => {
       kmAtual: itemNew?.kmAtual,
     }
     VeiculosService.save(data).then((response) => {
-      setRows([...rows, {...data, id: response?.data}])
+      setRows([...rows, { ...data, id: response?.data }])
       toast('Registro salvo com sucesso!', { type: 'success' })
-    }).finally(() => {
-      handleClose()
     })
+      .catch((error) => { toast('Erro ao salvar registro!', { type: 'error' }) })
+      .finally(() => {
+        handleClose()
+      })
   };
 
   const handleClickDelete = (id: any) => {
@@ -74,10 +76,12 @@ const VeiculosTemplate = () => {
     VeiculosService.delete({ id: itemDelete?.[0]?.id }).then((response) => {
       setRows(rows.filter((row) => row.id !== itemDelete?.[0]?.id))
       toast('Registro apagado!', { type: 'error' })
-    }).finally(() => {
-      setOpenDeleteDialog(false);
-      setItemDelete(undefined)
     })
+      .catch((error) => { toast('Erro ao apagar registro!', { type: 'error' }) })
+      .finally(() => {
+        setOpenDeleteDialog(false);
+        setItemDelete(undefined)
+      })
   };
 
   const handleClose = () => {
@@ -113,17 +117,19 @@ const VeiculosTemplate = () => {
         return row
       }))
       toast('Registro alterado com sucesso!', { type: 'success' })
-    }).finally(() => {
-      setOpenEditDialog(false);
-      setItemEdit({} as IVeiculoDTO)
     })
+      .catch((error) => { toast('Erro ao alterar registro!', { type: 'error' }) })
+      .finally(() => {
+        setOpenEditDialog(false);
+        setItemEdit({} as IVeiculoDTO)
+      })
   };
 
   return (
     <>
-    <Head>
-      <title>SGD Naty - Veiculos</title>
-    </Head>
+      <Head>
+        <title>SGD Naty - Veiculos</title>
+      </Head>
       <Stack
         direction="column"
         // justifyContent="center"
@@ -136,14 +142,14 @@ const VeiculosTemplate = () => {
           </Button>
         </Grid>
 
-        {loading ? 
-        <Grid container justifyContent="center" margin={'16px'} minHeight={'200px'} alignItems={'center'}>
-          <CircularProgress />
-        </Grid>
+        {loading ?
+          <Grid container justifyContent="center" margin={'16px'} minHeight={'200px'} alignItems={'center'}>
+            <CircularProgress />
+          </Grid>
           :
           <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} />
         }
-              </Stack>
+      </Stack>
 
       {/* New Dialog */}
       <Dialog
@@ -262,7 +268,7 @@ const VeiculosTemplate = () => {
             variant="standard"
             value={itemEdit?.marcaModelo}
             onChange={(event) => {
-              setItemEdit({ ...itemEdit, marcaModelo: event?.target?.value } )
+              setItemEdit({ ...itemEdit, marcaModelo: event?.target?.value })
             }}
           />
           <TextField
