@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import { Button, IconButton } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 
-export default function ListItem({ rows, columns , deleteAction, editAction}: { rows: any[], columns: any[] , deleteAction: any, editAction: any}) {
+export default function ListItem({ rows, columns, deleteAction, editAction, hideOptions }: { rows: any[], columns: any[], deleteAction: any, editAction: any, hideOptions?: boolean }) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -24,19 +24,17 @@ export default function ListItem({ rows, columns , deleteAction, editAction}: { 
     };
 
     const handleEditClick = (id: string) => {
-        console.log('Botão de Editar clicado '+id);
         editAction(id)
     };
 
     const handleDeleteClick = (id: string) => {
-        console.log('Botão de Apagar clicado '+id);
         deleteAction(id)
     };
     return (
         <Paper sx={{ width: '100%' }}>{columns ? <>
 
             <TableContainer sx={{ maxHeight: 400 }}>
-                <Table aria-label="dense table stickyHeader" 
+                <Table aria-label="dense table stickyHeader"
                     size={'small'}>
                     <TableHead >
                         <TableRow>
@@ -50,32 +48,40 @@ export default function ListItem({ rows, columns , deleteAction, editAction}: { 
                                     {column.label}
                                 </TableCell>
                             ))}
-                            <TableCell key={0} align={`center`}>
-                                Ações
-                            </TableCell>
+                            {!hideOptions &&
+                                <TableCell key={0} align={`center`}>
+                                    Ações
+                                </TableCell>
+                            }
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {rows?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row) => {
+                            .map((row, index) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                                         {columns?.map((column) => {
                                             const value = row[column.key];
                                             return (
                                                 <TableCell key={column.key} align={column.align} padding='checkbox'>
-                                                    {value}
+                                                    {
+                                                        column.type == 'date' ? new Date(value).toLocaleString('pt-BR', { timeZone: 'UTC' }) :
+                                                            column.type == 'currency' ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) :
+                                                                column.type == 'boolean' ? value ? 'Sim' : 'Não' :
+                                                                    value}
                                                 </TableCell>
                                             );
                                         })}
-                                        <TableCell align={`center`} padding='checkbox'>
-                                            <IconButton aria-label="edit">
-                                                <Edit color='info' onClick={()=>handleEditClick(row?.id)} />
-                                            </IconButton>
-                                            <IconButton aria-label="delete" size='small'>
-                                                <Delete color='error' onClick={()=>handleDeleteClick(row?.id)} />
-                                            </IconButton>
-                                        </TableCell>
+                                        {!hideOptions &&
+                                            <TableCell align={`center`} padding='checkbox'>
+                                                <IconButton aria-label="edit" onClick={() => handleEditClick(row?.id)}>
+                                                    <Edit color='info' />
+                                                </IconButton>
+                                                <IconButton aria-label="delete" size='small' onClick={() => handleDeleteClick(row?.id)}>
+                                                    <Delete color='error' />
+                                                </IconButton>
+                                            </TableCell>
+                                        }
                                     </TableRow>
                                 );
                             })}

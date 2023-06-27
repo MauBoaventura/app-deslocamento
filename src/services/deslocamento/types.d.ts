@@ -20,30 +20,20 @@ export interface IDeslocamentoProps {
   id: number;
 }
 
-export interface IDeslocamentoIniciarBody {
-  numeroDocumento?: string;
-  tipoDocumento?: string;
-  nome?: string;
-  logradouro?: string;
-  numero?: string;
-  bairro?: string;
-  cidade?: string;
-  uf?: string;
+export interface IDeslocamentoSaveBody {
+  kmInicial: number;
+  inicioDeslocamento: string;
+  checkList: string;
+  motivo: string;
+  observacao: string;
+  idCondutor: number;
+  idVeiculo: number;
+  idCliente: number;
 }
 
-export interface IDeslocamentoEncerrarBody {
+export interface IDeslocamentoUpdateBody {
   id: number;
   kmFinal: number;
   fimDeslocamento: string;
   observacao: string;
-}
-
-export interface IDeslocamentoUpdateBody {
-  id?: number;
-  nome?: string;
-  logradouro?: string;
-  numero?: string;
-  bairro?: string;
-  cidade?: string;
-  uf?: string;
 }

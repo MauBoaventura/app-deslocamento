@@ -4,13 +4,16 @@ import { SetStateAction, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import ListItem from 'components/atoms/List'
 import { CondutorService } from '../../services/condutor';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Snackbar, Stack, TextField, TextareaAutosize } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Snackbar, Stack, TextField, TextareaAutosize } from '@mui/material';
 import { ICondutorDTO, ICondutorSaveBody, ICondutorUpdateBody } from '../../services/condutor/types';
 import { toast } from 'react-toastify';
 import Head from 'next/head';
 
 const CondutoresTemplate = () => {
   const router = useRouter()
+
+  const [loading, setLoading] = useState(true)
+
   const [rows, setRows] = useState<any[]>([])
   const [columns, setColumns] = useState<any[]>([])
 
@@ -26,26 +29,15 @@ const CondutoresTemplate = () => {
 
   useEffect(() => {
     CondutorService.getAll().then((response) => {
-      setRows(response.data)
-      // const c = [{ key: 'id', label: 'Id' },
-      // { key: 'placa', label: 'N. Documento' },
-      // { key: 'marcaModelo', label: 'Tipo Documento' },
-      // { key: 'anoFabricacao', label: 'Nome' },
-      // { key: 'kmAtual', label: 'Logradouro' },
-      // { key: 'numero', label: 'Numero' },
-      // { key: 'bairro', label: 'Bairro' },
-      // { key: 'cidade', label: 'Cidade' },
-      // { key: 'uf', label: 'UF' },]
-      // console.log(c)
+      const c = [{ "key": "id", "label": "Id" },
+      { "key": "nome", "label": "Nome" },
+      { "key": "numeroHabilitacao", "label": "Numero Habilitacao" },
+      { "key": "catergoriaHabilitacao", "label": "Catergoria Habilitacao" },
+      { "key": "vencimentoHabilitacao", "label": "Vencimento Habilitacao" }]
 
-      // setColumns(c)
-      setColumns(Object.keys(response.data[0]).map((key) => {
-        const result = key.replace(/([A-Z])/g, " $1");
-        const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
-        return {
-          key: key, label: finalResult
-        }
-      }))
+      setColumns(c)
+      setRows(response.data)
+      setLoading(false)
     })
   }, [])
 
@@ -140,11 +132,17 @@ const CondutoresTemplate = () => {
       >
         <Grid container justifyContent="flex-end" marginRight={'16px'}>
           <Button onClick={handleNew} color='success' variant='contained' >
-            Novo
+            Iniciar Deslocamento
           </Button>
         </Grid>
 
-        <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} />
+        {loading ? 
+        <Grid container justifyContent="center" margin={'16px'} minHeight={'200px'} alignItems={'center'}>
+          <CircularProgress />
+        </Grid>
+          :
+          <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit}/>
+        }
       </Stack>
 
       {/* New Dialog */}

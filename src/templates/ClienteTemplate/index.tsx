@@ -4,12 +4,14 @@ import { SetStateAction, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import ListItem from 'components/atoms/List'
 import { ClientesService } from '../../services/cliente';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Snackbar, Stack, TextField, TextareaAutosize } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Snackbar, Stack, TextField, TextareaAutosize } from '@mui/material';
 import { IClienteDTO, IClienteSaveBody, IClienteUpdateBody } from '../../services/cliente/types';
 import { toast } from 'react-toastify';
 
 const ClientesTemplate = () => {
   const router = useRouter()
+  const [loading, setLoading] = useState(true)
+
   const [rows, setRows] = useState<any[]>([])
   const [columns, setColumns] = useState<any[]>([])
 
@@ -38,30 +40,14 @@ const ClientesTemplate = () => {
       console.log(c)
 
       setColumns(c)
-      // setColumns(Object.keys(response.data[0]).map((key) => {
-      //   const result = key.replace(/([A-Z])/g, " $1");
-      //   const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
-      //   return {
-      //     key: key, label: finalResult
-      //   }
-      // }))
+      setLoading(false)
     })
   }, [])
 
 
   const handleNew = () => {
     setOpenNewDialog(true);
-    setItemNew({
-      id: 0
-      , numeroDocumento: ''
-      , tipoDocumento: ''
-      , nome: ''
-      , logradouro: ''
-      , numero: ''
-      , bairro: ''
-      , cidade: ''
-      , uf: ''
-    })
+    setItemNew({} as IClienteDTO)
 
   };
 
@@ -157,10 +143,15 @@ const ClientesTemplate = () => {
           </Button>
         </Grid>
 
-       
-        <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} />
-      </Stack>
 
+        {loading ? 
+        <Grid container justifyContent="center" margin={'16px'} minHeight={'200px'} alignItems={'center'}>
+          <CircularProgress />
+        </Grid>
+          :
+          <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} />
+        }
+      </Stack>
       {/* New Dialog */}
       <Dialog
         open={openNewDialog}
