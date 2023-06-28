@@ -84,8 +84,8 @@ const DeslocamentoesTemplate = () => {
         { key: "kmFinal", label: "Km Final" },
         { key: "inicioDeslocamento", label: "Inicio Deslocamento", type: 'date' },
         { key: "fimDeslocamento", label: "Fim Deslocamento", type: 'date' },
-        { key: "checkList", label: "Check List" },
-        { key: "motivo", label: "Motivo" },
+        { key: "checkList", label: "Check List", type: 'checkList' },
+        { key: "motivo", label: "Motivo", type: 'checkList' },
         { key: "observacao", label: "Observacao" },
       ]
       

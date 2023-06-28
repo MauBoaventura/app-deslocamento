@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, Chip, Stack } from '@mui/material';
 import { Edit, Delete , Directions} from '@mui/icons-material';
 
 export default function ListItem({ rows, columns, deleteAction, editAction, hideOptions, extraOptions = true }: { rows: any[], columns: any[], deleteAction: any, editAction: any, hideOptions?: boolean , extraOptions?: boolean}) {
@@ -68,6 +68,11 @@ export default function ListItem({ rows, columns, deleteAction, editAction, hide
                                                         column.type == 'date' && value != null ? new Date(value).toLocaleString('pt-BR', { timeZone: 'UTC' }).split(', ')[0] :
                                                             column.type == 'currency' ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) :
                                                                 column.type == 'boolean' ? value ? 'Sim' : 'Não' :
+                                                                    column.type == 'checkList' ? value.split(',')?.map((item: any) => 
+                                                                    <Stack direction="column" margin={'4px'}>
+                                                                        <Chip label={item} color="primary" />
+                                                                    </Stack >
+                                                                    ) :
                                                                     value}
                                                 </TableCell>
                                             );
