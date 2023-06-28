@@ -4,7 +4,7 @@ import { SetStateAction, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import ListItem from 'components/atoms/List'
 import { CondutorService } from '../../services/condutor';
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Snackbar, Stack, TextField, TextareaAutosize } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Autocomplete, Stack, TextField, MenuItem } from '@mui/material';
 import { ICondutorDTO, ICondutorSaveBody, ICondutorUpdateBody } from '../../services/condutor/types';
 import { toast } from 'react-toastify';
 import Head from 'next/head';
@@ -27,6 +27,51 @@ const CondutoresTemplate = () => {
   const [itemEdit, setItemEdit] = useState<ICondutorDTO>({} as ICondutorDTO);
 
 
+  const categoriasHabilitacao = [
+    { label: 'A' },
+    { label: 'B' },
+    { label: 'C' },
+    { label: 'D' },
+    { label: 'E' },
+    { label: 'AB' },
+    { label: 'AC' },
+    { label: 'AD' },
+    { label: 'AE' },
+    { label: 'ACC' },
+    { label: 'ACD' },
+    { label: 'ACE' },
+    { label: 'BC' },
+    { label: 'BD' },
+    { label: 'BE' },
+    { label: 'CDE' },
+    { label: 'ACDE' },
+    { label: 'ABCDE' },
+    { label: 'ACCDE' },
+    { label: 'ACDE' },
+    { label: 'ACDE' },
+    { label: 'ACCDE' },
+    { label: 'ACDE' },
+    { label: 'ACDE' },
+    { label: 'ACCDE' },
+    { label: 'ACDE' },
+    { label: 'ACDE' },
+    { label: 'ACCDE' },
+    { label: 'ACDE' },
+    { label: 'ACDE' },
+    { label: 'ACCDE' },
+    { label: 'ACDE' },
+    { label: 'ACDE' },
+    { label: 'ACCDE' },
+    { label: 'ACDE' },
+    { label: 'ACDE' },
+    { label: 'ACCDE' },
+    { label: 'ACDE' },
+    { label: 'ACDE' },
+    { label: 'ACCDE' },
+    { label: 'ACDE' },
+    { label: 'ACDE' },
+    { label: 'ACCDE' },
+  ];
   useEffect(() => {
     CondutorService.getAll().then((response) => {
       const c = [
@@ -119,7 +164,7 @@ const CondutoresTemplate = () => {
       }))
       toast('Registro alterado com sucesso!', { type: 'success' })
     })
-    .catch((error) => { toast('Erro ao alterar registro!', { type: 'error' }) })
+    .catch((error) => { toast( `${error.response.data}!`, { type: 'error' }) })
     .finally(() => {
       setOpenEditDialog(false);
       setItemEdit({} as ICondutorDTO)
@@ -168,7 +213,6 @@ const CondutoresTemplate = () => {
             label="Nome"
             type="text"
             fullWidth
-            variant="standard"
             value={itemNew?.nome}
             onChange={(event) => {
               setItemNew({ ...itemNew, nome: event?.target?.value })
@@ -184,7 +228,6 @@ const CondutoresTemplate = () => {
             label="Número Habilitação (CNH)"
             type="text"
             fullWidth
-            variant="standard"
             value={itemNew?.numeroHabilitacao}
             onChange={(event) => {
               setItemNew({ ...itemNew, numeroHabilitacao: event?.target?.value })
@@ -194,28 +237,30 @@ const CondutoresTemplate = () => {
             }}
           />
           <TextField
-            autoFocus
-            margin="dense"
-            
-            label="Categoria Habilitação"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={itemNew?.catergoriaHabilitacao}
-            onChange={(event) => {
-              setItemNew({ ...itemNew, catergoriaHabilitacao: event?.target?.value })
-            }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+              autoFocus
+              margin="dense"
+              label="Categoria Habilitação"
+              type="text"
+              fullWidth
+              size='small'
+              value={itemNew?.catergoriaHabilitacao}
+              onChange={(event) => {
+                setItemNew({ ...itemNew, catergoriaHabilitacao: event?.target?.value })
+              }}
+              select
+            >
+              {categoriasHabilitacao.map((option) => (
+                <MenuItem key={option.label} value={option.label}>
+                  {option.label}
+                </MenuItem>
+              ))}
+              </TextField>
           <TextField
             autoFocus
             margin="dense"
             label="Vencimento Habilitacao"
             type="date"
             fullWidth
-            variant="standard"
             value={itemNew?.vencimentoHabilitacao}
             onChange={(event) => {
               setItemNew({ ...itemNew, vencimentoHabilitacao: (event?.target?.value) })
@@ -267,11 +312,29 @@ const CondutoresTemplate = () => {
           {"Editar:"}
         </DialogTitle>
         <DialogContent>
-          <TextField
+        <TextField
+              autoFocus
+              margin="dense"
+              label="Categoria Habilitação"
+              type="text"
+              fullWidth
+              // size='small'
+              value={itemEdit?.catergoriaHabilitacao}
+              onChange={(event) => {
+                setItemEdit({ ...itemEdit, catergoriaHabilitacao: event?.target?.value })
+              }}
+              select
+            >
+              {categoriasHabilitacao.map((option) => (
+                <MenuItem key={option.label} value={option.label}>
+                  {option.label}
+                </MenuItem>
+              ))}
+              </TextField>
+          {/* <TextField
             autoFocus
-            margin="dense"
-            
-            label="Marca Modelo"
+            margin="dense"     
+            label="Categoria Habilitação"
             type="text"
             fullWidth
             variant="standard"
@@ -279,7 +342,7 @@ const CondutoresTemplate = () => {
             onChange={(event) => {
               setItemEdit({ ...itemEdit, catergoriaHabilitacao: event?.target?.value })
             }}
-          />
+          /> */}
           <TextField
             autoFocus
             margin="dense"

@@ -14,7 +14,7 @@ import { CondutorService } from '../../services/condutor';
 import { VeiculosService } from '../../services/veiculo';
 import { IVeiculoDTO } from '../../services/veiculo/types';
 import { ICondutorDTO } from '../../services/condutor/types';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 
 const DeslocamentoesTemplate = () => {
   const router = useRouter()
@@ -31,6 +31,47 @@ const DeslocamentoesTemplate = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<IDeslocamentoDTO>({} as IDeslocamentoDTO);
 
+  const optionsCheclList = [
+      {
+        label: 'Pneus'
+      },
+      {
+        label: 'Freios'
+      },
+      {
+        label: 'Óleo'
+      },
+      {
+        label: 'Luzes'
+      },
+      {
+        label: 'Combustível'
+      },
+      {
+        label: 'Água'
+      },
+      {
+        label: 'Documentação'
+      },
+      {
+        label: 'Outros'
+      },
+    ]
+
+  const optionsCheclListMotivo = [
+    {
+      label: 'Entrega'
+    },
+    {
+      label: 'Coleta'
+    },
+    {
+      label: 'Manutenção'
+    },
+    {
+      label: 'Outros'
+    },
+  ]
 
   useEffect(() => {
     DeslocamentoService.getAll().then(async(response) => {
@@ -93,7 +134,6 @@ const DeslocamentoesTemplate = () => {
       toast('Registro salvo com sucesso!', { type: 'success' })
     })
     .catch((error) => { 
-      console.error(error)
       toast(`${error.response.data}!`, { type: 'error' }) })
     .finally(() => {
       handleClose()
@@ -103,7 +143,6 @@ const DeslocamentoesTemplate = () => {
   const handleClickDelete = (id: any) => {
     setOpenDeleteDialog(true);
     setItemDelete(rows.filter((row) => row.id === id))
-
   };
 
   const handleDelete = () => {
@@ -299,7 +338,6 @@ const DeslocamentoesTemplate = () => {
               renderInput={(params) => <TextField {...params} label="Selecione um carro" />}
             />
             <TextField
-              id="placa"
               label="KM inicial"
               type="text"
               fullWidth
@@ -324,27 +362,37 @@ const DeslocamentoesTemplate = () => {
                 shrink: true,
               }}
             />
-            <TextField
+            <Autocomplete
               size='small'
-              autoFocus
-              margin="dense"
-              label="CheckList"
-              type="text"
-              fullWidth
-              value={itemNew?.checkList}
-              onChange={(event) => {
-                setItemNew({ ...itemNew, checkList: event?.target?.value })
+              multiple
+              limitTags={1}
+              id="multiple-limit-tags"
+              options={optionsCheclList}
+              getOptionLabel={(option) => option.label}
+              // defaultValue={[categoriasHabilitacao[1]]}
+              renderInput={(params) => (
+                <TextField {...params} label="CheckList" placeholder="Selecione" />
+              )}
+              sx={{ width: '500px' }}
+              onChange={(event, newValue) => {
+                setItemNew({ ...itemNew, checkList: newValue.map((item) => item.label).join(', ') })
+
               }}
             />
-            <TextField
+            <Autocomplete
               size='small'
-              autoFocus
-              margin="dense"
-              label="Motivo"
-              fullWidth
-              value={itemNew?.motivo}
-              onChange={(event) => {
-                setItemNew({ ...itemNew, motivo: (event?.target?.value) })
+              multiple
+              limitTags={1}
+              id="multiple-limit-tags"
+              options={optionsCheclListMotivo}
+              getOptionLabel={(option) => option.label}
+              renderInput={(params) => (
+                <TextField {...params} label="Motivo" placeholder="Selecione" />
+              )}
+              sx={{ width: '500px' }}
+              onChange={(event, newValue) => {
+                setItemNew({ ...itemNew, motivo: newValue.map((item) => item.label).join(', ') })
+
               }}
             />
             <TextField

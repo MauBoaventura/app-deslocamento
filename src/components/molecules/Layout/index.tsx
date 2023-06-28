@@ -45,6 +45,7 @@ export default function Layout({ title, children }: LayoutProps) {
         }}
         variant="permanent"
         anchor="left"
+        open={false}
       >
         <Toolbar css={{alignSelf:'center'}}>
           <Box >
