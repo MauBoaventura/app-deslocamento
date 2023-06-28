@@ -4,14 +4,14 @@ import { SetStateAction, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import ListItem from 'components/atoms/List'
 import { ClientesService } from '../../services/cliente';
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Snackbar, Stack, TextField, TextareaAutosize } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Snackbar, Stack, TextField, MenuItem } from '@mui/material';
 import { IClienteDTO, IClienteSaveBody, IClienteUpdateBody } from '../../services/cliente/types';
 import { toast } from 'react-toastify';
 import { CEPService } from '../../services/cep';
-import { set } from 'date-fns';
 
 const ClientesTemplate = () => {
   const router = useRouter()
+  const [cep, setCep] = useState<string>('')
   const [loading, setLoading] = useState(true)
 
   const [rows, setRows] = useState<any[]>([])
@@ -26,7 +26,20 @@ const ClientesTemplate = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<IClienteDTO>({} as IClienteDTO);
 
-  const [cep, setCep] = useState<string>('')
+  const options = [
+    {
+      value: 'CPF',
+      label: 'CPF',
+    },
+    {
+      value: 'CNPJ',
+      label: 'CNPJ',
+    },
+    {
+      value: 'RG',
+      label: 'RG',
+    },
+  ];
 
   useEffect(() => {
     if (cep.length < 9) {
@@ -83,7 +96,7 @@ const ClientesTemplate = () => {
       uf: itemNew?.uf,
     }
     ClientesService.save(data).then((response) => {
-      setRows([...rows, {...data, id: response?.data}])
+      setRows([...rows, { ...data, id: response?.data }])
       toast('Registro salvo com sucesso!', { type: 'success' })
     }).finally(() => {
       handleClose()
@@ -164,10 +177,10 @@ const ClientesTemplate = () => {
         </Grid>
 
 
-        {loading ? 
-        <Grid container justifyContent="center" margin={'16px'} minHeight={'200px'} alignItems={'center'}>
-          <CircularProgress />
-        </Grid>
+        {loading ?
+          <Grid container justifyContent="center" margin={'16px'} minHeight={'200px'} alignItems={'center'}>
+            <CircularProgress />
+          </Grid>
           :
           <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} />
         }
@@ -183,7 +196,7 @@ const ClientesTemplate = () => {
           {"Novo:"}
         </DialogTitle>
         <DialogContent>
-        <TextField
+          <TextField
             autoFocus
             margin="dense"
             label="Nome"
@@ -195,32 +208,48 @@ const ClientesTemplate = () => {
               setItemNew({ ...itemNew, nome: event?.target?.value })
             }}
           />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="numeroDocumento"
-            label="Número do Documento"
-            type="text"
-            fullWidth
-            size='small'
-            value={itemNew?.numeroDocumento}
-            onChange={(event) => {
-              console.log(event?.target?.value)
-              setItemNew({ ...itemNew, numeroDocumento: event?.target?.value })
-            }}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Tipo Documento"
-            type="text"
-            fullWidth
-            size='small'
-            value={itemNew?.tipoDocumento}
-            onChange={(event) => {
-              setItemNew({ ...itemNew, tipoDocumento: event?.target?.value })
-            }}
-          />
+          <Stack
+            direction="row"
+            // justifyContent="center"
+            // alignItems="right"
+            spacing={2}
+          >
+
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Tipo Documento"
+              type="text"
+              fullWidth
+              size='small'
+              value={itemNew?.tipoDocumento}
+              onChange={(event) => {
+                setItemNew({ ...itemNew, tipoDocumento: event?.target?.value })
+              }}
+              select
+            >
+              {options.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+              </TextField>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="numeroDocumento"
+              label="Número do Documento"
+              type="text"
+              fullWidth
+              size='small'
+              value={itemNew?.numeroDocumento}
+              onChange={(event) => {
+                console.log(event?.target?.value)
+                setItemNew({ ...itemNew, numeroDocumento: event?.target?.value })
+              }}
+            />
+          </Stack>
+
           <TextField
             autoFocus
             margin="dense"
@@ -364,7 +393,7 @@ const ClientesTemplate = () => {
             size='small'
             value={itemEdit?.nome}
             onChange={(event) => {
-              setItemEdit({ ...itemEdit, nome: event?.target?.value } )
+              setItemEdit({ ...itemEdit, nome: event?.target?.value })
             }}
           />
           <TextField

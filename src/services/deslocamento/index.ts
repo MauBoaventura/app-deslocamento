@@ -2,7 +2,7 @@
 import { AxiosResponse } from "axios";
 import {
   IDeslocamentoProps,
-  IDeslocamentoIniciarBody,
+  IDeslocamentoSaveBody,
   IDeslocamentoDTO,
   IDeslocamentoUpdateBody,
 } from "./types";
@@ -23,7 +23,7 @@ export class DeslocamentoService {
     return deslocamentoApi.get(url);
   }
   static async iniciarDeslocamento(
-    data: IDeslocamentoIniciarBody
+    data: IDeslocamentoSaveBody
   ): Promise<AxiosResponse<number>> {
     const url = `${baseUrlDeslocamento}/IniciarDeslocamento`;
     return deslocamentoApi.post(url, data);
