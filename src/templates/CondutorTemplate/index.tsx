@@ -73,7 +73,6 @@ const CondutoresTemplate = () => {
   };
 
   const handleDelete = () => {
-    console.log(itemDelete)
     CondutorService.delete({ id: itemDelete?.[0]?.id }).then((response) => {
       setRows(rows.filter((row) => row.id !== itemDelete?.[0]?.id))
       toast('Registro apagado!', { type: 'error' })
@@ -108,7 +107,6 @@ const CondutoresTemplate = () => {
     CondutorService.update({ id: itemEdit?.id ?? 0 }, data).then((response) => {
       setRows(rows.map((row) => {
         if (row.id === itemEdit?.id) {
-          console.log(itemEdit)
           return {
             ...row,
             catergoriaHabilitacao: itemEdit?.catergoriaHabilitacao,
@@ -171,7 +169,6 @@ const CondutoresTemplate = () => {
             variant="standard"
             value={itemNew?.nome}
             onChange={(event) => {
-              console.log(event?.target?.value)
               setItemNew({ ...itemNew, nome: event?.target?.value })
             }}
           />

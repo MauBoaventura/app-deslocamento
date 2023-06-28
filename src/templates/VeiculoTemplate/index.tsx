@@ -172,8 +172,27 @@ const VeiculosTemplate = () => {
             variant="standard"
             value={itemNew?.placa}
             onChange={(event) => {
-              console.log(event?.target?.value)
-              setItemNew({ ...itemNew, placa: event?.target?.value })
+              let value = event.target.value.toUpperCase();
+
+              // Remove caracteres não permitidos
+              value = value.replace(/[^A-Z0-9]/g, '');
+          
+              // Limita a quantidade de caracteres a 7
+              if (value.length > 7) {
+                value = value.slice(0, 7);
+              }
+          
+              // Aplica a máscara de placa
+              if (value.length > 3) {
+                if (value.length === 4) {
+                  // Formato da placa antiga (AAA-9999)
+                  value = value.slice(0, 3) + '-' + value.slice(3);
+                } else {
+                  // Formato da placa nova (AAA9A99)
+                  value = value.slice(0, 3) + value.slice(3, 4) + '-' + value.slice(4);
+                }
+              }
+              setItemNew({ ...itemNew, placa: value })
             }}
           />
           <TextField
