@@ -48,7 +48,7 @@ export default function ListItem({ rows, columns, deleteAction, editAction, hide
                                     {column.label}
                                 </TableCell>
                             ))}
-                            {!hideOptions || !extraOptions &&
+                            {(!hideOptions || !extraOptions) &&
                                 <TableCell key={0} align={`center`}>
                                     Ações
                                 </TableCell>
