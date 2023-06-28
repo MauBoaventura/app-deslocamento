@@ -180,7 +180,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Tipo Documento"
             type="text"
             fullWidth
@@ -193,7 +193,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Nome"
             type="text"
             fullWidth
@@ -206,7 +206,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Logradouro"
             type="text"
             fullWidth
@@ -219,7 +219,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Número"
             type="text"
             fullWidth
@@ -232,7 +232,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Bairro"
             type="text"
             fullWidth
@@ -245,7 +245,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Cidade"
             type="text"
             fullWidth
@@ -258,7 +258,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="UF"
             type="text"
             fullWidth
@@ -314,7 +314,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Nome"
             type="text"
             fullWidth
@@ -327,7 +327,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Logradouro"
             type="text"
             fullWidth
@@ -340,7 +340,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Número"
             type="text"
             fullWidth
@@ -353,7 +353,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Bairro"
             type="text"
             fullWidth
@@ -366,7 +366,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="Cidade"
             type="text"
             fullWidth
@@ -379,7 +379,7 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            
             label="UF"
             type="text"
             fullWidth

@@ -179,7 +179,7 @@ const VeiculosTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+
             label="Marca Modelo"
             type="text"
             fullWidth
@@ -192,7 +192,7 @@ const VeiculosTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+
             label="Ano Fabricacao"
             type="text"
             fullWidth
@@ -205,7 +205,7 @@ const VeiculosTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+
             label="KM Atual"
             type="text"
             fullWidth
@@ -261,7 +261,7 @@ const VeiculosTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+
             label="Marca Modelo"
             type="text"
             fullWidth
@@ -274,7 +274,7 @@ const VeiculosTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+
             label="Ano Fabricacao"
             type="text"
             fullWidth
@@ -287,7 +287,7 @@ const VeiculosTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+
             label="Número"
             type="text"
             fullWidth
