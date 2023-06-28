@@ -7,6 +7,8 @@ import { ClientesService } from '../../services/cliente';
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Snackbar, Stack, TextField, TextareaAutosize } from '@mui/material';
 import { IClienteDTO, IClienteSaveBody, IClienteUpdateBody } from '../../services/cliente/types';
 import { toast } from 'react-toastify';
+import { CEPService } from '../../services/cep';
+import { set } from 'date-fns';
 
 const ClientesTemplate = () => {
   const router = useRouter()
@@ -16,7 +18,7 @@ const ClientesTemplate = () => {
   const [columns, setColumns] = useState<any[]>([])
 
   const [openNewDialog, setOpenNewDialog] = useState(false);
-  const [itemNew, setItemNew] = useState<IClienteDTO>();
+  const [itemNew, setItemNew] = useState<IClienteDTO>({} as IClienteDTO);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [itemDelete, setItemDelete] = useState<any>();
@@ -24,6 +26,24 @@ const ClientesTemplate = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<IClienteDTO>({} as IClienteDTO);
 
+  const [cep, setCep] = useState<string>('')
+
+  useEffect(() => {
+    if (cep.length < 9) {
+      console.log(cep)
+      return
+    }
+    CEPService.getById(cep.replace('-', '')).then((response) => {
+      setItemNew({
+        ...itemNew,
+        logradouro: response.data.logradouro as string,
+        bairro: response.data.bairro as string,
+        cidade: response.data.localidade as string,
+        uf: response.data.uf as string,
+      })
+      setLoading(false)
+    })
+  }, [cep])
 
   useEffect(() => {
     ClientesService.getAll().then((response) => {
@@ -91,7 +111,7 @@ const ClientesTemplate = () => {
     setOpenNewDialog(false);
     setOpenDeleteDialog(false);
     setOpenEditDialog(false);
-    setItemNew(undefined)
+    setItemNew({} as IClienteDTO)
     setItemDelete(undefined)
     setItemEdit({} as IClienteDTO)
   };
@@ -163,6 +183,18 @@ const ClientesTemplate = () => {
           {"Novo:"}
         </DialogTitle>
         <DialogContent>
+        <TextField
+            autoFocus
+            margin="dense"
+            label="Nome"
+            type="text"
+            fullWidth
+            size='small'
+            value={itemNew?.nome}
+            onChange={(event) => {
+              setItemNew({ ...itemNew, nome: event?.target?.value })
+            }}
+          />
           <TextField
             autoFocus
             margin="dense"
@@ -170,103 +202,115 @@ const ClientesTemplate = () => {
             label="Número do Documento"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemNew?.numeroDocumento}
             onChange={(event) => {
               console.log(event?.target?.value)
-              setItemNew(itemNew ? { ...itemNew, numeroDocumento: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, numeroDocumento: event?.target?.value })
             }}
           />
           <TextField
             autoFocus
             margin="dense"
-            
             label="Tipo Documento"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemNew?.tipoDocumento}
             onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, tipoDocumento: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, tipoDocumento: event?.target?.value })
             }}
           />
           <TextField
             autoFocus
             margin="dense"
-            
-            label="Nome"
+            label="CEP"
             type="text"
             fullWidth
-            variant="standard"
-            value={itemNew?.nome}
+            size='small'
+            value={cep}
             onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, nome: event?.target?.value } : undefined)
+              let value = event.target.value;
+
+              // Remove caracteres não numéricos
+              value = value.replace(/\D/g, '');
+
+              // Limita a quantidade de caracteres a 9
+              if (value.length > 8) {
+                value = value.slice(0, 8);
+              }
+              // Aplica a máscara de CEP (99999-999)
+              if (value.length > 5) {
+                value = value.slice(0, 5) + '-' + value.slice(5);
+              }
+
+              setCep(value);
             }}
           />
           <TextField
             autoFocus
             margin="dense"
-            
             label="Logradouro"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemNew?.logradouro}
             onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, logradouro: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, logradouro: event?.target?.value })
             }}
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             autoFocus
             margin="dense"
-            
             label="Número"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemNew?.numero}
             onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, numero: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, numero: event?.target?.value })
             }}
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             autoFocus
             margin="dense"
-            
             label="Bairro"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemNew?.bairro}
             onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, bairro: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, bairro: event?.target?.value })
             }}
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             autoFocus
             margin="dense"
-            
             label="Cidade"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemNew?.cidade}
             onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, cidade: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, cidade: event?.target?.value })
             }}
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             autoFocus
             margin="dense"
-            
             label="UF"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemNew?.uf}
             onChange={(event) => {
-              setItemNew(itemNew ? { ...itemNew, uf: event?.target?.value } : undefined)
+              setItemNew({ ...itemNew, uf: event?.target?.value })
             }}
+            InputLabelProps={{ shrink: true }}
           />
         </DialogContent>
         <DialogActions>
@@ -314,11 +358,10 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            
             label="Nome"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemEdit?.nome}
             onChange={(event) => {
               setItemEdit({ ...itemEdit, nome: event?.target?.value } )
@@ -327,11 +370,10 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            
             label="Logradouro"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemEdit?.logradouro}
             onChange={(event) => {
               setItemEdit({ ...itemEdit, logradouro: event?.target?.value })
@@ -340,11 +382,10 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            
             label="Número"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemEdit?.numero}
             onChange={(event) => {
               setItemEdit({ ...itemEdit, numero: event?.target?.value })
@@ -353,11 +394,10 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            
             label="Bairro"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemEdit?.bairro}
             onChange={(event) => {
               setItemEdit({ ...itemEdit, bairro: event?.target?.value })
@@ -366,11 +406,10 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            
             label="Cidade"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemEdit?.cidade}
             onChange={(event) => {
               setItemEdit({ ...itemEdit, cidade: event?.target?.value })
@@ -379,11 +418,10 @@ const ClientesTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            
             label="UF"
             type="text"
             fullWidth
-            variant="standard"
+            size='small'
             value={itemEdit?.uf}
             onChange={(event) => {
               setItemEdit({ ...itemEdit, uf: event?.target?.value })
