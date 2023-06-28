@@ -57,7 +57,9 @@ const CondutoresTemplate = () => {
       vencimentoHabilitacao: itemNew?.vencimentoHabilitacao,
     }
     CondutorService.save(data).then((response) => {
-      setRows([...rows, { ...data, id: response?.data }])
+      setRows([...rows, { ...data, id: response?.data ,
+        catergoriaHabilitacao: itemNew?.catergoriaHabilitacao,
+      }])
       toast('Registro salvo com sucesso!', { type: 'success' })
     })
     .catch((error) => { toast('Erro ao salvar registro!', { type: 'error' }) })
@@ -135,7 +137,7 @@ const CondutoresTemplate = () => {
       >
         <Grid container justifyContent="flex-end" marginRight={'16px'}>
           <Button onClick={handleNew} color='success' variant='contained' >
-            Iniciar Deslocamento
+            Novo
           </Button>
         </Grid>
 
@@ -171,6 +173,9 @@ const CondutoresTemplate = () => {
             onChange={(event) => {
               setItemNew({ ...itemNew, nome: event?.target?.value })
             }}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
           <TextField
             autoFocus
@@ -183,6 +188,9 @@ const CondutoresTemplate = () => {
             value={itemNew?.numeroHabilitacao}
             onChange={(event) => {
               setItemNew({ ...itemNew, numeroHabilitacao: event?.target?.value })
+            }}
+            InputLabelProps={{
+              shrink: true,
             }}
           />
           <TextField
@@ -197,11 +205,13 @@ const CondutoresTemplate = () => {
             onChange={(event) => {
               setItemNew({ ...itemNew, catergoriaHabilitacao: event?.target?.value })
             }}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
           <TextField
             autoFocus
             margin="dense"
-            
             label="Vencimento Habilitacao"
             type="date"
             fullWidth
@@ -209,6 +219,9 @@ const CondutoresTemplate = () => {
             value={itemNew?.vencimentoHabilitacao}
             onChange={(event) => {
               setItemNew({ ...itemNew, vencimentoHabilitacao: (event?.target?.value) })
+            }}
+            InputLabelProps={{
+              shrink: true,
             }}
           />
         </DialogContent>
@@ -273,7 +286,6 @@ const CondutoresTemplate = () => {
             label="Vencto Habilitacao"
             type="date"
             fullWidth
-            variant="standard"
             value={itemEdit?.vencimentoHabilitacao}
             defaultValue={itemEdit?.vencimentoHabilitacao}
             onChange={(event) => {
