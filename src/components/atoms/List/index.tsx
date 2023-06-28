@@ -8,9 +8,9 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Button, IconButton } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
+import { Edit, Delete , Directions} from '@mui/icons-material';
 
-export default function ListItem({ rows, columns, deleteAction, editAction, hideOptions }: { rows: any[], columns: any[], deleteAction: any, editAction: any, hideOptions?: boolean }) {
+export default function ListItem({ rows, columns, deleteAction, editAction, hideOptions, extraOptions = true }: { rows: any[], columns: any[], deleteAction: any, editAction: any, hideOptions?: boolean , extraOptions?: boolean}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -48,7 +48,7 @@ export default function ListItem({ rows, columns, deleteAction, editAction, hide
                                     {column.label}
                                 </TableCell>
                             ))}
-                            {!hideOptions &&
+                            {!hideOptions || !extraOptions &&
                                 <TableCell key={0} align={`center`}>
                                     Ações
                                 </TableCell>
@@ -56,7 +56,7 @@ export default function ListItem({ rows, columns, deleteAction, editAction, hide
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            {rows.length > 0 ? rows?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => {
                                 return (
                                     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
@@ -82,9 +82,25 @@ export default function ListItem({ rows, columns, deleteAction, editAction, hide
                                                 </IconButton>
                                             </TableCell>
                                         }
+                                        {!extraOptions &&
+                                            <TableCell align={`center`} padding='checkbox'>
+                                                <IconButton aria-label="edit" onClick={() => handleEditClick(row?.id)}>
+                                                    <Directions color='info' />
+                                                </IconButton>
+                                                <IconButton aria-label="delete" size='small' onClick={() => handleDeleteClick(row?.id)}>
+                                                    <Delete color='error' />
+                                                </IconButton>
+                                            </TableCell>
+                                        } 
                                     </TableRow>
                                 );
-                            })}
+                            }):<>
+                                <TableRow hover role="checkbox" tabIndex={-1} key={0} >
+                                    <TableCell align={`center`} colSpan={columns.length + 1} height={'300px'}>
+                                        <h1>Nenhum registro encontrado</h1>
+                                    </TableCell>
+                                </TableRow>
+                            </>}
                     </TableBody>
                 </Table>
             </TableContainer>

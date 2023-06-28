@@ -29,7 +29,8 @@ const CondutoresTemplate = () => {
 
   useEffect(() => {
     CondutorService.getAll().then((response) => {
-      const c = [{ "key": "id", "label": "Id" },
+      const c = [
+      { "key": "id", "label": "Id" },
       { "key": "nome", "label": "Nome" },
       { "key": "numeroHabilitacao", "label": "Numero Habilitacao" },
       { "key": "catergoriaHabilitacao", "label": "Catergoria Habilitacao" },

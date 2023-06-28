@@ -65,7 +65,6 @@ const DeslocamentoesTemplate = () => {
         }
       })
 
-      console.log(rows)
       setRows(rows)
       setLoading(false)
     })
@@ -108,11 +107,12 @@ const DeslocamentoesTemplate = () => {
   };
 
   const handleDelete = () => {
-    console.log(itemDelete)
     DeslocamentoService.delete({ id: itemDelete?.[0]?.id }).then((response) => {
       setRows(rows.filter((row) => row.id !== itemDelete?.[0]?.id))
       toast('Registro apagado!', { type: 'error' })
-    }).finally(() => {
+    })
+    .catch((error) => { toast(`${error.response.data}!`, { type: 'error' }) })
+    .finally(() => {
       setOpenDeleteDialog(false);
       setItemDelete(undefined)
     })
@@ -145,7 +145,6 @@ const DeslocamentoesTemplate = () => {
     DeslocamentoService.encerrarDeslocamento({ id: itemEdit?.id ?? 0 }, data).then((response) => {
       setRows(rows.map((row) => {
         if (row.id === itemEdit?.id) {
-          console.log(itemEdit)
           return {
             ...row,
             ...data
@@ -154,7 +153,9 @@ const DeslocamentoesTemplate = () => {
         return row
       }))
       toast('Registro alterado com sucesso!', { type: 'success' })
-    }).finally(() => {
+    })
+    .catch((error) => { toast(`${error.response.data}!`, { type: 'error' }) })
+    .finally(() => {
       setOpenEditDialog(false);
       setItemEdit({} as IDeslocamentoDTO)
     })
@@ -257,7 +258,7 @@ const DeslocamentoesTemplate = () => {
           <Grid container justifyContent="center" margin={'16px'} minHeight={'200px'} alignItems={'center'}>
             <CircularProgress />
           </Grid>
-          : <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} hideOptions />
+          : <ListItem columns={columns} rows={rows} deleteAction={handleClickDelete} editAction={handleClickEdit} hideOptions extraOptions={false} />
         }
       </Stack>
 
@@ -400,13 +401,13 @@ const DeslocamentoesTemplate = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Editar:"}
+          {"Finalizar:"}
         </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            
+            required
             label="KM Final"
             type="text"
             fullWidth
@@ -417,9 +418,9 @@ const DeslocamentoesTemplate = () => {
             }}
           />
           <TextField
+            required
             autoFocus
             margin="dense"
-            
             label="Fim deslocamento"
             type="date"
             fullWidth
@@ -427,6 +428,9 @@ const DeslocamentoesTemplate = () => {
             value={itemEdit?.fimDeslocamento}
             onChange={(event) => {
               setItemEdit({ ...itemEdit, fimDeslocamento: event?.target?.value })
+            }}
+            InputLabelProps={{
+              shrink: true,
             }}
           />
           <TextField
