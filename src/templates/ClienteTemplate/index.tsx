@@ -62,13 +62,13 @@ const ClientesTemplate = () => {
     ClientesService.getAll().then((response) => {
       setRows(response.data)
       const c = [{ key: 'id', label: 'Id' },
-      { key: 'numeroDocumento', label: 'N. Documento' },
-      { key: 'tipoDocumento', label: 'Tipo Documento' },
       { key: 'nome', label: 'Nome' },
+      { key: 'tipoDocumento', label: 'Tipo Documento' },
+      { key: 'numeroDocumento', label: 'N. Documento' },
+      { key: 'cidade', label: 'Cidade' },
       { key: 'logradouro', label: 'Logradouro' },
       { key: 'numero', label: 'Numero' },
       { key: 'bairro', label: 'Bairro' },
-      { key: 'cidade', label: 'Cidade' },
       { key: 'uf', label: 'UF' },]
       console.log(c)
 
