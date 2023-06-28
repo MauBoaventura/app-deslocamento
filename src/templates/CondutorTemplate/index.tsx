@@ -33,7 +33,7 @@ const CondutoresTemplate = () => {
       { "key": "nome", "label": "Nome" },
       { "key": "numeroHabilitacao", "label": "Numero Habilitacao" },
       { "key": "catergoriaHabilitacao", "label": "Catergoria Habilitacao" },
-      { "key": "vencimentoHabilitacao", "label": "Vencimento Habilitacao" }]
+      { "key": "vencimentoHabilitacao", "label": "Vencimento Habilitacao", type: 'date' }]
 
       setColumns(c)
       setRows(response.data)
@@ -58,7 +58,9 @@ const CondutoresTemplate = () => {
     CondutorService.save(data).then((response) => {
       setRows([...rows, { ...data, id: response?.data }])
       toast('Registro salvo com sucesso!', { type: 'success' })
-    }).finally(() => {
+    })
+    .catch((error) => { toast('Erro ao salvar registro!', { type: 'error' }) })
+    .finally(() => {
       handleClose()
     })
   };
@@ -74,7 +76,9 @@ const CondutoresTemplate = () => {
     CondutorService.delete({ id: itemDelete?.[0]?.id }).then((response) => {
       setRows(rows.filter((row) => row.id !== itemDelete?.[0]?.id))
       toast('Registro apagado!', { type: 'error' })
-    }).finally(() => {
+    })
+    .catch((error) => { toast('Erro ao apagar registro!', { type: 'error' }) })
+    .finally(() => {
       setOpenDeleteDialog(false);
       setItemDelete(undefined)
     })
@@ -113,7 +117,9 @@ const CondutoresTemplate = () => {
         return row
       }))
       toast('Registro alterado com sucesso!', { type: 'success' })
-    }).finally(() => {
+    })
+    .catch((error) => { toast('Erro ao alterar registro!', { type: 'error' }) })
+    .finally(() => {
       setOpenEditDialog(false);
       setItemEdit({} as ICondutorDTO)
     })
@@ -126,8 +132,6 @@ const CondutoresTemplate = () => {
       </Head>
       <Stack
         direction="column"
-        // justifyContent="center"
-        // alignItems="right"
         spacing={2}
       >
         <Grid container justifyContent="flex-end" marginRight={'16px'}>
@@ -268,14 +272,17 @@ const CondutoresTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-            
-            label="Ano Fabricacao"
-            type="text"
+            label="Vencto Habilitacao"
+            type="date"
             fullWidth
             variant="standard"
             value={itemEdit?.vencimentoHabilitacao}
+            defaultValue={itemEdit?.vencimentoHabilitacao}
             onChange={(event) => {
               setItemEdit({ ...itemEdit, vencimentoHabilitacao: event?.target?.value })
+            }}
+            InputLabelProps={{
+              shrink: true,
             }}
           />
         </DialogContent>

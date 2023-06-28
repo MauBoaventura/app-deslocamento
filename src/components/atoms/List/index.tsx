@@ -31,8 +31,8 @@ export default function ListItem({ rows, columns, deleteAction, editAction, hide
         deleteAction(id)
     };
     return (
-        <Paper sx={{ width: '100%' }}>{columns ? <>
-
+        <Paper sx={{ width: '100%' }}>{
+        columns ? <>
             <TableContainer sx={{ maxHeight: 400 }}>
                 <Table aria-label="dense table stickyHeader"
                     size={'small'}>
@@ -65,7 +65,7 @@ export default function ListItem({ rows, columns, deleteAction, editAction, hide
                                             return (
                                                 <TableCell key={column.key} align={column.align} padding='checkbox'>
                                                     {
-                                                        column.type == 'date' ? new Date(value).toLocaleString('pt-BR', { timeZone: 'UTC' }) :
+                                                        column.type == 'date' && value != null ? new Date(value).toLocaleString('pt-BR', { timeZone: 'UTC' }).split(', ')[0] :
                                                             column.type == 'currency' ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) :
                                                                 column.type == 'boolean' ? value ? 'Sim' : 'Não' :
                                                                     value}

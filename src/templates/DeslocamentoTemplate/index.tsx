@@ -33,21 +33,40 @@ const DeslocamentoesTemplate = () => {
 
 
   useEffect(() => {
-    DeslocamentoService.getAll().then((response) => {
-      setRows(response.data)
-      const c = [{ key: "id", label: "Id" },
-      { key: "kmInicial", label: "Km Inicial" },
-      { key: "kmFinal", label: "Km Final" },
-      { key: "inicioDeslocamento", label: "Inicio Deslocamento", type: 'date' },
-      { key: "fimDeslocamento", label: "Fim Deslocamento", type: 'date' },
-      { key: "checkList", label: "Check List" },
-      { key: "motivo", label: "Motivo" },
-      { key: "observacao", label: "Observacao" },
-      { key: "idCondutor", label: "Id Condutor" },
-      { key: "idVeiculo", label: "Id Veiculo" },
-      { key: "idCliente", label: "Id Cliente" }]
-
+    DeslocamentoService.getAll().then(async(response) => {
+      const c = [ 
+        { key: "id", label: "ID" },
+        { key: "idCliente", label: "Cliente" },
+        { key: "idCondutor", label: "Condutor" },
+        { key: "idVeiculo", label: "Veiculo" },
+        { key: "kmInicial", label: "Km Inicial" },
+        { key: "kmFinal", label: "Km Final" },
+        { key: "inicioDeslocamento", label: "Inicio Deslocamento", type: 'date' },
+        { key: "fimDeslocamento", label: "Fim Deslocamento", type: 'date' },
+        { key: "checkList", label: "Check List" },
+        { key: "motivo", label: "Motivo" },
+        { key: "observacao", label: "Observacao" },
+      ]
+      
       setColumns(c)
+      const allClientes = await ClientesService.getAll()
+      const allVeiculos = await VeiculosService.getAll()
+      const allCondutores = await CondutorService.getAll()
+
+      const rows = response.data.map((row) => {
+        const cliente = allClientes.data.find((cliente) => cliente.id === row.idCliente)
+        const veiculo = allVeiculos.data.find((veiculo) => veiculo.id === row.idVeiculo)
+        const condutor = allCondutores.data.find((condutor) => condutor.id === row.idCondutor)
+        return {
+          ...row,
+          idCliente: cliente?.nome,
+          idVeiculo: veiculo?.placa,
+          idCondutor: condutor?.nome,
+        }
+      })
+
+      console.log(rows)
+      setRows(rows)
       setLoading(false)
     })
   }, [])
@@ -71,9 +90,13 @@ const DeslocamentoesTemplate = () => {
       idCliente: itemNew?.idCliente
     }
     DeslocamentoService.iniciarDeslocamento(data).then((response) => {
-      setRows([...rows, { ...data, id: response?.data }])
+      setRows([...rows, { ...data, id: response?.data , idCliente: selectedOptionCliente?.nome, idVeiculo: selectedOptionVeiculo?.placa, idCondutor: selectedOptionCondutor?.nome}])
       toast('Registro salvo com sucesso!', { type: 'success' })
-    }).finally(() => {
+    })
+    .catch((error) => { 
+      console.error(error)
+      toast(`${error.response.data}!`, { type: 'error' }) })
+    .finally(() => {
       handleClose()
     })
   };
@@ -102,6 +125,9 @@ const DeslocamentoesTemplate = () => {
     setItemNew({} as IDeslocamentoDTO)
     setItemDelete(undefined)
     setItemEdit({} as IDeslocamentoDTO)
+    setSelectedOptionCliente(null)
+    setSelectedOptionCondutor(null)
+    setSelectedOptionVeiculo(null)
   };
 
   const handleClickEdit = (id: any) => {
@@ -243,11 +269,12 @@ const DeslocamentoesTemplate = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Novo:"}
+          {"Inicio Deslocamento:"}
         </DialogTitle>
         <DialogContent>
           <Stack direction="column" spacing={2} minWidth={'500px'} maxWidth={'1000px'}>
             <Autocomplete
+              size='small'
               options={optionsCliente}
               getOptionLabel={(option) => option.nome}
               value={selectedOptionCliente}
@@ -255,6 +282,7 @@ const DeslocamentoesTemplate = () => {
               renderInput={(params) => <TextField {...params} label="Selecione um cliente" />}
             />
             <Autocomplete
+              size='small'
               options={optionsCondutor}
               getOptionLabel={(option) => option.nome}
               value={selectedOptionCondutor}
@@ -262,6 +290,7 @@ const DeslocamentoesTemplate = () => {
               renderInput={(params) => <TextField {...params} label="Selecione um condutor" />}
             />
             <Autocomplete
+              size='small'
               options={optionsVeiculo}
               getOptionLabel={(option) => option.placa}
               value={selectedOptionVeiculo}
@@ -269,22 +298,21 @@ const DeslocamentoesTemplate = () => {
               renderInput={(params) => <TextField {...params} label="Selecione um carro" />}
             />
             <TextField
-              autoFocus
-              margin="dense"
               id="placa"
               label="KM inicial"
               type="text"
               fullWidth
-              variant="standard"
+              size='small'
+              // variant="standard"
               value={itemNew?.kmInicial}
               onChange={(event) => {
                 setItemNew({ ...itemNew, kmInicial: parseInt(event?.target?.value) })
               }}
             />
             <TextField
+              size='small'
               label="Data inicio deslocamento"
               type="date"
-              variant="standard"
               fullWidth
               value={itemNew?.inicioDeslocamento}
               // defaultValue={new Date()}
@@ -296,28 +324,39 @@ const DeslocamentoesTemplate = () => {
               }}
             />
             <TextField
+              size='small'
               autoFocus
               margin="dense"
-              
               label="CheckList"
               type="text"
               fullWidth
-              variant="standard"
               value={itemNew?.checkList}
               onChange={(event) => {
                 setItemNew({ ...itemNew, checkList: event?.target?.value })
               }}
             />
             <TextField
+              size='small'
               autoFocus
               margin="dense"
-              
               label="Motivo"
               fullWidth
-              variant="standard"
               value={itemNew?.motivo}
               onChange={(event) => {
                 setItemNew({ ...itemNew, motivo: (event?.target?.value) })
+              }}
+            />
+            <TextField
+              size='small'
+              multiline
+              minRows={4}
+              margin="dense"
+              label="Observação"
+              fullWidth
+              variant="standard"
+              value={itemNew?.observacao}
+              onChange={(event) => {
+                setItemNew({ ...itemNew, observacao: (event?.target?.value) })
               }}
             />
           </Stack>

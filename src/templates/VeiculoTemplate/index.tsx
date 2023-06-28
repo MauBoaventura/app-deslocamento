@@ -179,7 +179,6 @@ const VeiculosTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-
             label="Marca Modelo"
             type="text"
             fullWidth
@@ -192,7 +191,6 @@ const VeiculosTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-
             label="Ano Fabricacao"
             type="text"
             fullWidth
@@ -205,7 +203,6 @@ const VeiculosTemplate = () => {
           <TextField
             autoFocus
             margin="dense"
-
             label="KM Atual"
             type="text"
             fullWidth
