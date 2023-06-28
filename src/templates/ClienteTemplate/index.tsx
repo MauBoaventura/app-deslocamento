@@ -54,7 +54,13 @@ const ClientesTemplate = () => {
         cidade: response.data.localidade as string,
         uf: response.data.uf as string,
       })
-      setLoading(false)
+      setItemEdit({
+        ...itemEdit,
+        logradouro: response.data.logradouro as string,
+        bairro: response.data.bairro as string,
+        cidade: response.data.localidade as string,
+        uf: response.data.uf as string,
+      })
     })
   }, [cep])
 
@@ -394,6 +400,32 @@ const ClientesTemplate = () => {
             value={itemEdit?.nome}
             onChange={(event) => {
               setItemEdit({ ...itemEdit, nome: event?.target?.value })
+            }}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="CEP"
+            type="text"
+            fullWidth
+            size='small'
+            value={cep}
+            onChange={(event) => {
+              let value = event.target.value;
+
+              // Remove caracteres não numéricos
+              value = value.replace(/\D/g, '');
+
+              // Limita a quantidade de caracteres a 9
+              if (value.length > 8) {
+                value = value.slice(0, 8);
+              }
+              // Aplica a máscara de CEP (99999-999)
+              if (value.length > 5) {
+                value = value.slice(0, 5) + '-' + value.slice(5);
+              }
+
+              setCep(value);
             }}
           />
           <TextField
