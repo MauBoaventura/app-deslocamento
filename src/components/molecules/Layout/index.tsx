@@ -26,6 +26,7 @@ type LayoutProps = {
 export default function Layout({ title, children }: LayoutProps) {
   const router = useRouter()
   const menuList = [{ name: 'Clientes', path: 'clientes' }, { name: 'Veículos', path: 'veiculos' }, { name: 'Condutores', path: 'condutores' }, { name: 'Deslocamentos', path: 'deslocamentos' }]
+  const menuList2 = [{ name: 'Sem retorno', path: 'abertos' }, { name: 'Retornados', path: 'fechados' }]
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -50,6 +51,8 @@ export default function Layout({ title, children }: LayoutProps) {
         <Toolbar css={{alignSelf:'center'}}>
           <Box >
             <Image
+              onClick={() => router.push('/')}
+              css={{ cursor: 'pointer' }} 
               alt="SGD Naty"
               src="/images/brand-logo.png"
               width={100}
@@ -71,6 +74,18 @@ export default function Layout({ title, children }: LayoutProps) {
           ))}
         </List>
         <Divider />
+        <List>
+          {menuList2.map((item, index) => (
+            <ListItem key={index} disablePadding>
+              <ListItemButton onClick={() => router.push(item.path)}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={item?.name} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />

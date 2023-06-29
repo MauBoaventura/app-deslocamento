@@ -68,7 +68,7 @@ export default function ListItem({ rows, columns, deleteAction, editAction, hide
                                                         column.type == 'date' && value != null ? new Date(value).toLocaleString('pt-BR', { timeZone: 'UTC' }).split(', ')[0] :
                                                             column.type == 'currency' ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) :
                                                                 column.type == 'boolean' ? value ? 'Sim' : 'Não' :
-                                                                    column.type == 'checkList' ? value.split(',')?.map((item: any) => 
+                                                                    column.type == 'checkList' ? value?.split(',')?.map((item: any) => 
                                                                     <Stack direction="column" margin={'4px'}>
                                                                         <Chip label={item} color="primary" />
                                                                     </Stack >
